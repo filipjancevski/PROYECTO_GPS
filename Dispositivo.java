@@ -62,6 +62,46 @@ public class Dispositivo {
                ", " + this.ubicacionActual;
     }
 
+    public boolean estaEnZonaSegura(ZonaSegura zona)
+    {
+        return zona.contiene(this.ubicacionActual);
+    }
+
+    boolean bateriaBaja()
+    {
+        return (this.bateria < 20);
+    }
+
+    boolean tieneUbicacion()
+    {
+        if(ubicacionActual != null)
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+
+    void cargarBateria(int cantidad)
+    {
+        if(cantidad + this.bateria > 100)
+        {
+            throw new RuntimeException();
+        }
+        this.bateria += cantidad;
+    }
+
+    void descargarBateria(int cantidad)
+    {
+        if(cantidad + this.bateria < 100)
+        {
+            throw new RuntimeException();
+        }
+        this.bateria -= cantidad;
+    }
+
 
 
 }

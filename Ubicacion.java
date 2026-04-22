@@ -36,5 +36,6 @@ public Ubicacion(double lattitude, double longitud, String timestamp)
          return "Ubicacion: (" + this.lattitude + ", " + this.longitud + "), hora: " + this.timestamp;
     }
 
+    
 
 }
