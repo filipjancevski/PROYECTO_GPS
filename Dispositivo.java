@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class Dispositivo {
     private String id;
     private String nombre;
     private int bateria;
     private Ubicacion ubicacionActual;
+    private ArrayList <Ubicacion> ubicacionesAnteriores;
 
     public Dispositivo(String id, String nombre, int bateria, Ubicacion ubicacion) {
     
@@ -10,6 +13,7 @@ public class Dispositivo {
         this.nombre = nombre;
         this.bateria = bateria;
         this.ubicacionActual = ubicacion;
+        this.ubicacionesAnteriores = new ArrayList<>();
     }
 
 
@@ -101,6 +105,39 @@ public class Dispositivo {
         }
         this.bateria -= cantidad;
     }
+
+    void nuevaUbicacion(Ubicacion nueva_ubicacion)
+    {
+        if(nueva_ubicacion == null)
+        throw new RuntimeException();
+
+        if(this.ubicacionActual != null)
+        {
+            this.ubicacionesAnteriores.add(this.ubicacionActual);
+        }
+
+        this.ubicacionActual = nueva_ubicacion;
+        this.ubicacionesAnteriores.add(nueva_ubicacion);
+    }
+
+    int totalUbicaciones()
+    {
+        int num_ubicaciones;
+        num_ubicaciones = ubicacionesAnteriores.size();
+        return num_ubicaciones;
+    }
+
+    Ubicacion devolverUbicacion(int index)
+    {
+        if(index < 0 || index >= this.ubicacionesAnteriores.size())
+        {
+            throw new RuntimeException();
+        }
+
+        return ubicacionesAnteriores.get(index);
+    }
+
+
 
 
 
