@@ -6,7 +6,7 @@ public class Dispositivo {
     private int bateria;
     private Ubicacion ubicacionActual;
     private ArrayList <Ubicacion> ubicacionesAnteriores;
-    private ArrayList<Alerta> alertas;
+    private GestorAlertas gestorAlertas;
 
     public Dispositivo(String id, String nombre, int bateria, Ubicacion ubicacion) {
     
@@ -15,8 +15,10 @@ public class Dispositivo {
         this.bateria = bateria;
         this.ubicacionActual = ubicacion;
         this.ubicacionesAnteriores = new ArrayList<>();
-        this.alertas = new ArrayList<Alerta>();
+        this.gestorAlertas = new GestorAlertas();
     }
+
+
 
 
     public void setId(String id) 
@@ -59,14 +61,9 @@ public class Dispositivo {
        return this.ubicacionActual;
     }
 
-    public void agregarAlerta(Alerta alerta)
+    public GestorAlertas getGestorAlertas()
     {
-        this.alertas.add(alerta);
-    }
-
-    public ArrayList<Alerta> getAlertas()
-    {
-        return this.alertas;
+        return this.gestorAlertas;
     }
 
    @Override
@@ -148,28 +145,32 @@ public class Dispositivo {
 
         return ubicacionesAnteriores.get(index);
     }
-    void alertaBateria()
-    {
-        Alerta alertaBateriaBaja = new Alerta("Batería baja", "La batería del dispositivo está por debajo del 20%");
-        this.alertas.add(alertaBateriaBaja);
+
+
+     public void verificarAlertas() 
+     {
+        // Alerta por batería baja
+        if (this.bateria < 20) 
+            {
+                Alerta alertaBateriaBaja = new Alerta("Batería baja", "La batería del dispositivo está por debajo del 20%");
+                this.gestorAlertas.agregarAlerta(alertaBateriaBaja);
+            }
+
+        // Alerta por salir de la zona segura
+        ZonaSegura zona = new ZonaSegura("Casa", new Ubicacion(40.4168, -3.7038, "centro"), 0.01);
+        if (!zona.contiene(this.ubicacionActual)) 
+            {
+                Alerta alertaFueraZona = new Alerta("Fuera de zona segura", "El dispositivo ha salido de la zona segura.");
+                this.gestorAlertas.agregarAlerta(alertaFueraZona);
+            }
     }
 
-    void alertaZonaSegura(ZonaSegura zona)
+    public void mostrarAlertas()
     {
-        if(zona == null)
+        ArrayList<Alerta> alertasActivas = this.gestorAlertas.obtenerAlertasActivas();
+        for (Alerta alerta : alertasActivas)
         {
-            throw new RuntimeException();
-        }
-
-        if(!estaEnZonaSegura(zona))
-        {
-            Alerta alertaZonaSegura = new Alerta(
-                "Zona segura",
-                "El dispositivo está fuera de la zona segura: " + zona.getNombre()
-            );
-            this.alertas.add(alertaZonaSegura);
+            System.out.println(alerta);
         }
     }
-
-
 }
