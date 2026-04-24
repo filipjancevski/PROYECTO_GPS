@@ -6,6 +6,7 @@ public class Dispositivo {
     private int bateria;
     private Ubicacion ubicacionActual;
     private ArrayList <Ubicacion> ubicacionesAnteriores;
+    private ArrayList<Alerta> alertas;
 
     public Dispositivo(String id, String nombre, int bateria, Ubicacion ubicacion) {
     
@@ -14,6 +15,7 @@ public class Dispositivo {
         this.bateria = bateria;
         this.ubicacionActual = ubicacion;
         this.ubicacionesAnteriores = new ArrayList<>();
+        this.alertas = new ArrayList<Alerta>();
     }
 
 
@@ -55,6 +57,16 @@ public class Dispositivo {
      public Ubicacion getUbicacion()
     {
        return this.ubicacionActual;
+    }
+
+    public void agregarAlerta(Alerta alerta)
+    {
+        this.alertas.add(alerta);
+    }
+
+    public ArrayList<Alerta> getAlertas()
+    {
+        return this.alertas;
     }
 
    @Override
@@ -136,9 +148,28 @@ public class Dispositivo {
 
         return ubicacionesAnteriores.get(index);
     }
+    void alertaBateria()
+    {
+        Alerta alertaBateriaBaja = new Alerta("Batería baja", "La batería del dispositivo está por debajo del 20%");
+        this.alertas.add(alertaBateriaBaja);
+    }
 
+    void alertaZonaSegura(ZonaSegura zona)
+    {
+        if(zona == null)
+        {
+            throw new RuntimeException();
+        }
 
-
+        if(!estaEnZonaSegura(zona))
+        {
+            Alerta alertaZonaSegura = new Alerta(
+                "Zona segura",
+                "El dispositivo está fuera de la zona segura: " + zona.getNombre()
+            );
+            this.alertas.add(alertaZonaSegura);
+        }
+    }
 
 
 }
